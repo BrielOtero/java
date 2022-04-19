@@ -1,0 +1,40 @@
+/*         
+                            _(\\_/) 
+                          ,((((^`\\
+                         ((((  (6 \\ 
+                       ,((((( ,    \\
+   ,,,_              ,(((((  /\"._  ,`,
+  ((((\\\\ ,...       ,((((   /    `-.-'
+  )))  ;'    `\"'\"'\"\"((((   (      
+ (((  /            (((      \\
+  )) |                      |
+ ((  |        .       \'     |
+ ))  \\     _ \'      `t   ,.\')
+ (   |   y;- -,-\"\"\'\"-.\\   \\/  
+ )   / ./  ) /         `\\  \\
+    |./   ( (           / /\'
+    ||     \\\\          //\'|
+    ||      \\\\       _//\'||
+    ||       ))     |_/  ||
+    \\_\\     |_/          ||
+    `\'\"                  \\_\\
+
+           ,--,
+     _ ___/ /\\|
+ ,;\'( )__, )  ~
+//  //   \'--; 
+\'   \\     | ^
+
+numeroCaballo=1;
+numeroCaballo = (int) (Math.random() * (5 - 1)) + 1;
+numeroMovimiento=0;
+numeroCaballo=1;
+numeroMovimiento = (int) (Math.random()*(4 - 1))+ 1;
+numeroMovimiento = (int)(Math.random()*(4-1+1)+1);    
+double numeroMovimiento = Math.random() * ( max_val - min_val );
+numeroMovimiento=0;
+numeroMovimiento = Math.ceil(Math.random()*4);
+
+     ^    ^
+    	
+*/  

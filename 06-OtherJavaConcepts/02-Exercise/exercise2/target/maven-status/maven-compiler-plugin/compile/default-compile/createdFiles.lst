@@ -1,0 +1,8 @@
+com\geometry\Polygon.class
+com\geometry\Line.class
+com\geometry\Point.class
+com\exercise\Application.class
+com\geometry\Figure.class
+com\iu\IUInterface.class
+com\geometry\Circumference.class
+com\iu\Library.class
