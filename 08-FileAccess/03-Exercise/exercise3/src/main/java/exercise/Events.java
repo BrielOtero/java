@@ -2,10 +2,7 @@ package exercise;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Scanner;
 
 import javax.swing.ImageIcon;
