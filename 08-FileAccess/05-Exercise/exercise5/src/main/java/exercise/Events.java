@@ -12,8 +12,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 public class Events extends JFrame implements ActionListener {
@@ -31,6 +29,10 @@ public class Events extends JFrame implements ActionListener {
 	String textToPrint1 = "";
 	String textToPrint2 = "";
 	String textToPrint3 = "";
+
+	String textToCreate2 = "";
+	String textToCreate3 = "";
+
 	int column1 = 0;
 	double column2 = 0;
 	double column3 = 0;
@@ -152,12 +154,12 @@ public class Events extends JFrame implements ActionListener {
 		}
 
 		if (e.getSource() == btnCreate) {
-			
-			if(txfRows.getText().length()>10){
-				err=true;
-			} else{	
+
+			if (txfRows.getText().length() > 10) {
+				err = true;
+			} else {
 				try {
-					
+
 					rows = Integer.parseInt(txfRows.getText());
 				} catch (Exception o) {
 					err = true;
@@ -189,7 +191,14 @@ public class Events extends JFrame implements ActionListener {
 								int rndColumn1 = (int) (Math.random() * 91 + 10);
 								double rndColumn2 = (Double) (Math.random() * 1001);
 								double rndColumn3 = (Double) (Math.random() * 9901 + 100);
-								p.println(String.format("%d,%.3f,%.3f", rndColumn1, rndColumn2, rndColumn3));
+
+								textToCreate2 = String.format("%.3f", rndColumn2);
+								textToCreate3 = String.format("%.3f", rndColumn3);
+
+								textToCreate2 = textToCreate2.replace(",", ".");
+								textToCreate3 = textToCreate3.replace(",", ".");
+
+								p.println(String.format("%d,%s,%s", rndColumn1, textToCreate2, textToCreate3));
 
 							}
 							p.close();
