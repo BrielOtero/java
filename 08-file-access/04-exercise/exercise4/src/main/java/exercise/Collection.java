@@ -245,7 +245,7 @@ public class Collection {
 					try (PrintWriter p = new PrintWriter(System.getProperty("user.home") + "/save.txt")) {
 
 						for (Videogame videogame : videogames) {
-							saveData += String.format("%s~@-#~%d~@-#~%s~@-#~", videogame.getTitle(), videogame.getYear(),
+							saveData += String.format("%s---%d---%s---", videogame.getTitle(), videogame.getYear(),
 									videogame.getManufacturer());
 						}
 						

@@ -22,26 +22,31 @@ public class Application {
 			} catch (IOException e) {
 			}
 
-			if (!saveValue.equals("")) {
-
-				splitValues = saveValue.split("~@-#~");
+			try {
 				
-				if(splitValues[0]=="-" && splitValues[1]=="-" && splitValues[2]=="-"){
+				if (!saveValue.equals("")) {
 					
+					splitValues = saveValue.split("---");
+					
+					if(splitValues[0]=="-" && splitValues[1]=="-" && splitValues[2]=="-"){
+						
+					}
+					
+					for (int i = 0; i < splitValues.length; i += 3) {
+						Videogame game = new Videogame(splitValues[i], Integer.parseInt(splitValues[i + 1]),
+						splitValues[i + 2]);
+						games.getVideogames().add(game);
+						
+					}
 				}
-
-				for (int i = 0; i < splitValues.length; i += 3) {
-					Videogame game = new Videogame(splitValues[i], Integer.parseInt(splitValues[i + 1]),
-							splitValues[i + 2]);
-					games.getVideogames().add(game);
-
-				}
+				
+				System.out.print("\033[H\033[2J");
+				System.out.flush();
+				
+				games.menu();
+			} catch (Exception e) {
+				System.out.println("File is corrupt");
 			}
-
-			System.out.print("\033[H\033[2J");
-			System.out.flush();
-
-			games.menu();
-
+				
 	}
 }	
