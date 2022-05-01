@@ -1,6 +1,8 @@
 package exercise;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Scanner;
 
@@ -12,7 +14,6 @@ public class IUApp {
 
 	public void Menu() {
 		fr.clearScreen();
-
 
 		int menu;
 
@@ -69,7 +70,6 @@ public class IUApp {
 
 			try {
 				f = new File(pathFile);
-
 			} catch (NumberFormatException e) {
 				error = true;
 			}
@@ -80,14 +80,30 @@ public class IUApp {
 
 		} while (error);
 
-		try (RandomAccessFile rf =new RandomAccessFile(f, "r")) {
-			for (int i = 0; i < 16; i++) {
-			System.out.println(rf.readByte());	
+		try (RandomAccessFile rf = new RandomAccessFile(f, "r")) {
+			int byteToPrint = 0;
+			rf.seek(0);
+			System.out.print("Offset(h) 00");
+			for (int i = 1; i <= 15; i++) {
+				System.out.printf("  %02X", i);
 			}
-			
-			
-		} catch (Exception e) {
-			//TODO: handle exception
+			System.out.println();
+			for (int i = 0; byteToPrint != -1; i++) {
+				System.out.printf("%07X0 ", i);
+				for (int j = 0; j < 16; j++) {
+					byteToPrint = rf.read();
+					if (byteToPrint != -1) {
+						System.out.printf(" %02X ", byteToPrint);
+					}
+				}
+				System.out.println();
+			}
+		} catch (FileNotFoundException e) {
+			System.out.println("Error on reading: " + e.getMessage());
+
+		} catch (IOException e) {
+			System.out.println("Error on writing: " + e.getMessage());
+
 		}
 	}
 
