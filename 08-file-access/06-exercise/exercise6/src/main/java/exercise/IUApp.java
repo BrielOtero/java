@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class IUApp {
@@ -14,10 +15,11 @@ public class IUApp {
 
 	public void Menu() {
 		fr.clearScreen();
-
-		int menu;
+		boolean error = false;
+		int menu = 0;
 
 		do {
+			error = false;
 			fr.printLine(len);
 			fr.printString("Welcome to HexDump", len);
 			fr.printLine(len);
@@ -27,7 +29,11 @@ public class IUApp {
 			fr.printString("2. Exit     ", len);
 			fr.printLine(len);
 			System.out.print("--> ");
-			menu = sc.nextInt();
+			try {
+				menu = sc.nextInt();
+			} catch (InputMismatchException e) {
+				error = true;
+			}
 			sc.nextLine();
 			switch (menu) {
 				case 1:
@@ -43,7 +49,7 @@ public class IUApp {
 					break;
 			}
 
-		} while (menu != 2);
+		} while (menu != 2 || error);
 
 	}
 
