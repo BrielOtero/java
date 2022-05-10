@@ -26,6 +26,8 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 	public int topLineImgSize = 45;
 	public int fontSize = 28;
 	public int historyX = 0;
+	public Color[] colors = { Color.RED, Color.GREEN, Color.MAGENTA, Color.YELLOW, Color.ORANGE, Color.CYAN,
+		Color.PINK };
 	Timer timeColor;
 	Timer timeTrash;
 
@@ -49,8 +51,8 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 
 		MouseHandler handler = new MouseHandler();
 
-		timeColor = new Timer(100, this);
-		timeTrash = new Timer(300, this);
+		timeColor = new Timer(300, this);
+		timeTrash = new Timer(2000, this);
 		timeColor.start();
 		timeTrash.start();
 
@@ -116,9 +118,9 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 					trash.setLocation(phoneNumber.getWidth() + 30, 25);
 					historyX = getContentPane().getWidth();
 					setSize(new Dimension(getWidth(), label[11].getY() + size + 50));
+					revalidate();
+					repaint();
 				}
-				// revalidate();
-				// repaint();
 			}
 		});
 		addKeyListener(this);
@@ -164,8 +166,7 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 						selectedLabel = 999;
 						resizeIcons();
 						resetPosition();
-
-						label[i].setIcon(imgFormat.colorizeIcon(sizeImg, i, Color.green));
+						label[i].setIcon(imgFormat.colorizeIcon(sizeImg+10, i, Color.green));
 						selectedLabel = i;
 						phoneNumber.setText(phoneNumber.getText() + getIcoName(i));
 						isAnySet = true;
@@ -250,8 +251,6 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == timeColor && !isAnySet) {
 			contAnimation++;
-			Color[] colors = { Color.RED, Color.GREEN, Color.MAGENTA, Color.YELLOW, Color.ORANGE, Color.CYAN,
-					Color.PINK };
 
 			if (contAnimation > 20 && contAnimation <= 33) {
 				int j = (int) (Math.random() * 7);
@@ -353,7 +352,7 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 				selectedLabel = 999;
 				resizeIcons();
 				resetPosition();
-				label[keyIndex].setIcon(imgFormat.colorizeIcon(sizeImg, keyIndex, Color.green));
+				label[keyIndex].setIcon(imgFormat.colorizeIcon(sizeImg+10, keyIndex, Color.green));
 				selectedLabel = keyIndex;
 				phoneNumber.setText(phoneNumber.getText() + getIcoName(keyIndex));
 				isAnySet = true;

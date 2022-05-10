@@ -53,7 +53,7 @@ public class ImgFormat {
 			if (i != ignore) {
 				newIcons[i] = buffToImage(buff, allColor, sizeImg);
 			} else {
-				newIcons[i] = buffToImage(buff, ignoreColor, sizeImg);
+				newIcons[i] = buffToImage(buff, ignoreColor, sizeImg+10);
 			}
 		}
 		return newIcons;
