@@ -27,7 +27,7 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 	public int fontSize = 28;
 	public int historyX = 0;
 	public Color[] colors = { Color.RED, Color.GREEN, Color.MAGENTA, Color.YELLOW, Color.ORANGE, Color.CYAN,
-		Color.PINK };
+			Color.PINK };
 	Timer timeColor;
 	Timer timeTrash;
 
@@ -52,7 +52,7 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 		MouseHandler handler = new MouseHandler();
 
 		timeColor = new Timer(300, this);
-		timeTrash = new Timer(500, this);
+		timeTrash = new Timer(300, this);
 		timeColor.start();
 		timeTrash.start();
 
@@ -169,7 +169,7 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 						selectedLabel = 999;
 						resizeIcons();
 						resetPosition();
-						label[i].setIcon(imgFormat.colorizeIcon(sizeImg+10, i, Color.green));
+						label[i].setIcon(imgFormat.colorizeIcon(sizeImg + 10, i, Color.green));
 						selectedLabel = i;
 						phoneNumber.setText(phoneNumber.getText() + getIcoName(i));
 						isAnySet = true;
@@ -271,34 +271,44 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 				if (contAnimation > 21 && contAnimation <= 33) {
 					try {
 						label[contAnimation - 22]
-						.setIcon(imgFormat.colorizeIcon(sizeImg, contAnimation - 22, Color.LIGHT_GRAY));
+								.setIcon(imgFormat.colorizeIcon(sizeImg, contAnimation - 22, Color.LIGHT_GRAY));
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
 				}
 			} else if (contAnimation > 33) {
 				phoneNumber.setForeground(Color.BLACK);
-				contAnimation = 0;
+				
 			}
-		}
 
-		if (e.getSource() == timeTrash) {
-			contTrash++;
-			if (contTrash % 2 == 0) {
-				try {
-					int j = (int) (Math.random() * 7);
-					trash.setIcon(imgFormat.colorizeIcon(topLineSize, 12, colors[j]));
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-			} else {
-				try {
-					trash.setIcon(imgFormat.colorizeIcon(topLineImgSize, 12, Color.LIGHT_GRAY));
-				} catch (IOException e1) {
-					e1.printStackTrace();
+			if (contAnimation > 20 && contAnimation <= 33) {
+				if (e.getSource() == timeTrash) {
+					contTrash++;
+					if (contTrash % 2 == 0) {
+						try {
+							int j = (int) (Math.random() * 7);
+							trash.setIcon(imgFormat.colorizeIcon(topLineSize, 12, colors[j]));
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+					} else {
+						try {
+							trash.setIcon(imgFormat.colorizeIcon(topLineImgSize, 12, Color.LIGHT_GRAY));
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+					}
+				} else if (contAnimation > 33) {
+					try {
+						trash.setIcon(imgFormat.colorizeIcon(topLineImgSize, 12, Color.LIGHT_GRAY));
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+					contAnimation = 0;
 				}
 			}
 		}
+		
 
 	}
 
@@ -359,7 +369,7 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 				selectedLabel = 999;
 				resizeIcons();
 				resetPosition();
-				label[keyIndex].setIcon(imgFormat.colorizeIcon(sizeImg+10, keyIndex, Color.green));
+				label[keyIndex].setIcon(imgFormat.colorizeIcon(sizeImg + 10, keyIndex, Color.green));
 				selectedLabel = keyIndex;
 				phoneNumber.setText(phoneNumber.getText() + getIcoName(keyIndex));
 				isAnySet = true;
