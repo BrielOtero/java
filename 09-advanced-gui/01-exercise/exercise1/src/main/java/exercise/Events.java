@@ -23,6 +23,8 @@ public class Events extends JFrame implements KeyListener {
 	JLabel lblKey;
 	String setPressed = "";
 	String setTyped = "";
+	public int xPosition=0;
+	public int yPosition=0;
 
 	// It's a static variable that is used to set the default value of the JComboBox
 	// in the Secondary class.
@@ -101,7 +103,7 @@ public class Events extends JFrame implements KeyListener {
 		btn1 = new JButton();
 		btn1.setSize(125, 50);
 		btn1.setLocation(125, 50);
-		btn1.addMouseListener(handler);
+		btn1.setFocusable(false);
 		btn1.addMouseMotionListener(handler);
 		btn1.setBackground(defaultColor);
 		add(btn1);
@@ -111,7 +113,7 @@ public class Events extends JFrame implements KeyListener {
 		btn2 = new JButton();
 		btn2.setSize(125, 50);
 		btn2.setLocation(250, 50);
-		btn2.addMouseListener(handler);
+		btn2.setFocusable(false);
 		btn2.addMouseMotionListener(handler);
 		btn2.setBackground(defaultColor);
 		add(btn2);
@@ -126,6 +128,7 @@ public class Events extends JFrame implements KeyListener {
 		// the JFrame and adding a key listener to the JFrame.
 		this.getContentPane().addMouseListener(handler);
 		this.getContentPane().addMouseMotionListener(handler);
+
 		addKeyListener(this);
 
 		// It's adding a window listener to the JFrame.
@@ -153,9 +156,15 @@ public class Events extends JFrame implements KeyListener {
 	private class MouseHandler extends MouseAdapter {
 
 		@Override
-		// It's setting the title of the window to the position of the mouse.
+	// It's setting the title of the window to the position of the mouse.
 		public void mouseMoved(MouseEvent e) {
-			Events.this.setTitle(String.format(titleWindow + " - (X:%d,Y:%d)", e.getX(), e.getY()));
+			if (e.getSource() == getContentPane()) {
+				xPosition=e.getX();
+				yPosition=e.getY();
+				Events.this.setTitle(String.format(titleWindow + " - (X:%d,Y:%d)", xPosition, yPosition));
+			} else {
+				Events.this.setTitle(String.format(titleWindow + " - (X:%d,Y:%d)",e.getX()+xPosition, e.getY()+yPosition));
+			}
 		}
 
 		@Override
@@ -165,7 +174,8 @@ public class Events extends JFrame implements KeyListener {
 		}
 
 		@Override
-		// It's setting the background color of the button to red when the mouse is pressed.
+		// It's setting the background color of the button to red when the mouse is
+		// pressed.
 		public void mousePressed(MouseEvent e) {
 			System.err.println(e.getButton());
 			if (e.getButton() == 1) {
@@ -180,8 +190,12 @@ public class Events extends JFrame implements KeyListener {
 		// It's setting the background color of the button to the default color when the
 		// mouse is released.
 		public void mouseReleased(MouseEvent e) {
-			btn1.setBackground(defaultColor);
-			btn2.setBackground(defaultColor);
+			if (e.getButton() == 1) {
+				btn1.setBackground(defaultColor);
+			}
+			if (e.getButton() == 3) {
+				btn2.setBackground(defaultColor);
+			}
 		}
 	}
 
