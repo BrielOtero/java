@@ -16,6 +16,7 @@ public class Application {
 		events.setSize(500, 300);
 		events.setResizable(false);
 		events.setLocationRelativeTo(null);
+		System.out.println("Hola");
 
 	}
 }
