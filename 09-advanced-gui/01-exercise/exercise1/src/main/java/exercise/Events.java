@@ -1,6 +1,7 @@
 package exercise;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
@@ -23,8 +24,6 @@ public class Events extends JFrame implements KeyListener {
 	JLabel lblKey;
 	String setPressed = "";
 	String setTyped = "";
-	public int xPosition=0;
-	public int yPosition=0;
 
 	// It's a static variable that is used to set the default value of the JComboBox
 	// in the Secondary class.
@@ -156,15 +155,16 @@ public class Events extends JFrame implements KeyListener {
 	private class MouseHandler extends MouseAdapter {
 
 		@Override
-	// It's setting the title of the window to the position of the mouse.
+		// It's setting the title of the window to the position of the mouse.
 		public void mouseMoved(MouseEvent e) {
 			if (e.getSource() == getContentPane()) {
-				xPosition=e.getX();
-				yPosition=e.getY();
-				Events.this.setTitle(String.format(titleWindow + " - (X:%d,Y:%d)", xPosition, yPosition));
+				Events.this.setTitle(String.format(titleWindow + " - (X:%d,Y:%d)", e.getX(), e.getY()));
 			} else {
-				Events.this.setTitle(String.format(titleWindow + " - (X:%d,Y:%d)",e.getX()+xPosition, e.getY()+yPosition));
+				Events.this.setTitle(String.format(titleWindow + " - (X:%d,Y:%d)",
+						e.getX() + ((Component) e.getSource()).getLocation().x,
+						e.getY() + ((Component) e.getSource()).getLocation().y));
 			}
+
 		}
 
 		@Override

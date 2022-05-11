@@ -27,7 +27,9 @@ public class Secondary extends JDialog implements ActionListener, ItemListener {
 
 	JButton save;
 
-	String[] colors = { "Orange", "Green", "Blue", "Black" };
+	String[] colorsName = { "Orange", "Green", "Blue", "Black" };
+	Color[] colors={Color.ORANGE,Color.GREEN,Color.BLUE,Color.BLACK};
+
 
 	Events events = (Events) this.getOwner();
 
@@ -94,7 +96,7 @@ public class Secondary extends JDialog implements ActionListener, ItemListener {
 		// an item listener to the combo box, setting the size and location of the combo
 		// box, and adding the
 		// combo box to the window.
-		cbColors = new JComboBox<String>(colors);
+		cbColors = new JComboBox<String>(colorsName);
 		cbColors.setMaximumRowCount(4);
 		cbColors.setSelectedIndex(dfSelectSecon);
 		cbColors.addItemListener(this);
@@ -122,9 +124,9 @@ public class Secondary extends JDialog implements ActionListener, ItemListener {
 		// the default color of the buttons.
 		events.setTitleWindow(tfTitle.getText());
 		events.setTitle(tfTitle.getText());
-		events.btn1.setBackground(color);
-		events.btn2.setBackground(color);
-		events.setDefaultColor(color);
+		events.btn1.setBackground(colors[cbColors.getSelectedIndex()]);
+		events.btn2.setBackground(colors[cbColors.getSelectedIndex()]);
+		events.setDefaultColor(colors[cbColors.getSelectedIndex()]);
 
 		if (e.getSource() == save) {
 			if (events.getDefaultColor() == null) {
@@ -135,9 +137,9 @@ public class Secondary extends JDialog implements ActionListener, ItemListener {
 				events.setTitle("Mouse Control");
 				events.setTitleWindow("Mouse Control");
 			}
-			events.btn1.setBackground(color);
-			events.btn2.setBackground(color);
-			events.setDefaultColor(color);
+			events.btn1.setBackground(colors[cbColors.getSelectedIndex()]);
+			events.btn2.setBackground(colors[cbColors.getSelectedIndex()]);
+			events.setDefaultColor(colors[cbColors.getSelectedIndex()]);
 			this.getContentPane().setBackground(Color.red);
 			this.setVisible(false);
 		}
@@ -147,27 +149,11 @@ public class Secondary extends JDialog implements ActionListener, ItemListener {
 	// A method that is called when an item is selected from the combo box.
 	public void itemStateChanged(ItemEvent e) {
 
-		// Setting the color variable to the color that is selected in the combo box.
-		switch (cbColors.getSelectedIndex()) {
-			case 0:
-				color = Color.ORANGE;
-				break;
-			case 1:
-				color = Color.GREEN;
-				break;
-			case 2:
-				color = Color.BLUE;
-				break;
-			case 3:
-				color = Color.BLACK;
-				break;
-		}
-
 		// Setting the default color of the buttons to the color that is selected in the combo box.
 		events.setDfSelectItem(cbColors.getSelectedIndex());
-		events.btn1.setBackground(color);
-		events.btn2.setBackground(color);
-		events.setDefaultColor(color);
+		events.btn1.setBackground(colors[cbColors.getSelectedIndex()]);
+		events.btn2.setBackground(colors[cbColors.getSelectedIndex()]);
+		events.setDefaultColor(colors[cbColors.getSelectedIndex()]);
 
 	}
 
