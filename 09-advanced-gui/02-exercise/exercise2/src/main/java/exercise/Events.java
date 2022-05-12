@@ -15,6 +15,9 @@ import javax.swing.Timer;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JTextField;
 
 public class Events extends JDialog implements ActionListener, KeyListener {
@@ -38,6 +41,11 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 	ImageIcon[] icons;
 	private JLabel[] label;
 	private JLabel trash;
+	JMenuBar mnuMain;
+	JMenu mnuFile;
+	JMenuItem mnuSaveNum, mnuReadNum, mnuReset, mnuSplit, mnuExit, mnuAbout;
+	JMenu mnuMobile;
+	JMenu mnuOthers;
 
 	private int selectedLabel = 999;
 	private boolean isAnySet = false;
@@ -48,6 +56,34 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 		setLayout(null);
 		setFocusable(true);
 		setMinimumSize(new Dimension(330, 530));
+
+		mnuSaveNum=new JMenuItem("Save Number");
+		mnuSaveNum.setMnemonic('S');
+		mnuSaveNum.addActionListener(this);
+
+		mnuReadNum=new JMenuItem("Read Number");
+		mnuReadNum.setMnemonic('S');
+		mnuReadNum.addActionListener(this);
+
+		mnuReset=new JMenuItem("Save Number");
+		mnuReset.setMnemonic('S');
+		mnuReset.addActionListener(this);
+
+		mnuSaveNum=new JMenuItem("Save Number");
+		mnuSaveNum.setMnemonic('S');
+		mnuSaveNum.addActionListener(this);
+
+		mnuSaveNum=new JMenuItem("Save Number");
+		mnuSaveNum.setMnemonic('S');
+		mnuSaveNum.addActionListener(this);
+
+		mnuSaveNum=new JMenuItem("Save Number");
+		mnuSaveNum.setMnemonic('S');
+		mnuSaveNum.addActionListener(this);
+
+		mnuSaveNum=new JMenuItem("Save Number");
+		mnuSaveNum.setMnemonic('S');
+		mnuSaveNum.addActionListener(this);
 
 		MouseHandler handler = new MouseHandler();
 
