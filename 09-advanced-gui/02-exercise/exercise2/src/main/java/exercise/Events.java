@@ -14,6 +14,7 @@ import java.io.IOException;
 import javax.swing.Timer;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -22,33 +23,46 @@ import javax.swing.JTextField;
 
 public class Events extends JDialog implements ActionListener, KeyListener {
 	JTextField phoneNumber;
-	public int size = 80;
-	public int sizeImg = 70;
-	public int separation = 15;
-	public int topLineSize = 50;
-	public int topLineImgSize = 45;
-	public int fontSize = 28;
-	public int historyX = 0;
-	public Color[] colors = { Color.RED, Color.GREEN, Color.MAGENTA, Color.YELLOW, Color.ORANGE, Color.CYAN,
+
+	// Format
+	int size = 80;
+	int sizeImg = 70;
+	int separation = 15;
+	int topLineSize = 50;
+	int topLineImgSize = 45;
+	int fontSize = 28;
+
+	// Values
+	int historyX = 0;
+	Color[] colors = { Color.RED, Color.GREEN, Color.MAGENTA, Color.YELLOW, Color.ORANGE, Color.CYAN,
 			Color.PINK };
-	Timer timeColor;
-	Timer timeTrash;
 
 	int contAnimation = 0;
-	int contTrash = 0;
 
 	ImgFormat imgFormat = new ImgFormat();
 	ImageIcon[] icons;
-	private JLabel[] label;
-	private JLabel trash;
+	
+	int selectedLabel = 999;
+
+	int fcSelected;
+
+	boolean isAnySet = false;
+
+	// Components
+	JLabel[] label;
+	JLabel trash;
+	Timer timeColor;
+	Timer timeTrash;
+	JFileChooser fc;
+
+	// Creating a menu bar, a menu, and menu items.
 	JMenuBar mnuMain;
 	JMenu mnuFile;
 	JMenuItem mnuSaveNum, mnuReadNum, mnuReset, mnuSplit, mnuExit, mnuAbout;
 	JMenu mnuMobile;
 	JMenu mnuOthers;
 
-	private int selectedLabel = 999;
-	private boolean isAnySet = false;
+	
 
 	public Events() throws IOException {
 
@@ -57,33 +71,56 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 		setFocusable(true);
 		setMinimumSize(new Dimension(330, 530));
 
-		mnuSaveNum=new JMenuItem("Save Number");
+		// Creating a menu item and adding it to the menu.
+		mnuSaveNum = new JMenuItem("Save");
 		mnuSaveNum.setMnemonic('S');
 		mnuSaveNum.addActionListener(this);
 
-		mnuReadNum=new JMenuItem("Read Number");
-		mnuReadNum.setMnemonic('S');
+		mnuReadNum = new JMenuItem("Read");
+		mnuReadNum.setMnemonic('R');
 		mnuReadNum.addActionListener(this);
 
-		mnuReset=new JMenuItem("Save Number");
-		mnuReset.setMnemonic('S');
+		mnuFile = new JMenu("File");
+		mnuFile.setMnemonic('F');
+		mnuFile.add(mnuSaveNum);
+		mnuFile.add(mnuReadNum);
+
+		// Creating a menu item called "Mobile" and adding the menu items "Reset",
+		// "Split", and "Exit" to it.
+		mnuReset = new JMenuItem("Reset");
+		mnuReset.setMnemonic('R');
 		mnuReset.addActionListener(this);
 
-		mnuSaveNum=new JMenuItem("Save Number");
-		mnuSaveNum.setMnemonic('S');
-		mnuSaveNum.addActionListener(this);
+		mnuSplit = new JMenuItem("Split");
+		mnuSplit.setMnemonic('S');
+		mnuSplit.addActionListener(this);
 
-		mnuSaveNum=new JMenuItem("Save Number");
-		mnuSaveNum.setMnemonic('S');
-		mnuSaveNum.addActionListener(this);
+		mnuExit = new JMenuItem("Exit");
+		mnuExit.setMnemonic('E');
+		mnuExit.addActionListener(this);
 
-		mnuSaveNum=new JMenuItem("Save Number");
-		mnuSaveNum.setMnemonic('S');
-		mnuSaveNum.addActionListener(this);
+		mnuMobile = new JMenu("Mobile");
+		mnuMobile.setMnemonic('M');
+		mnuMobile.add(mnuReset);
+		mnuMobile.add(mnuSplit);
+		mnuMobile.add(mnuExit);
 
-		mnuSaveNum=new JMenuItem("Save Number");
-		mnuSaveNum.setMnemonic('S');
-		mnuSaveNum.addActionListener(this);
+		// Creating a menu item called "About" and adding it to the "Others" menu.
+		mnuAbout = new JMenuItem("About");
+		mnuAbout.setMnemonic('A');
+		mnuAbout.addActionListener(this);
+
+		mnuOthers = new JMenu("Others");
+		mnuOthers.setMnemonic('O');
+		mnuOthers.add(mnuAbout);
+
+		// Adding the menu items to the menu bar.
+		mnuMain = new JMenuBar();
+		mnuMain.add(mnuFile);
+		mnuMain.add(mnuMobile);
+		mnuMain.add(mnuOthers);
+
+		this.setJMenuBar(mnuMain);
 
 		MouseHandler handler = new MouseHandler();
 
@@ -123,6 +160,7 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 				// 4 7 Asterisk
 				l.setLocation(25, label[i - 3].getY() + size + separation);
 			}
+
 			l.addMouseListener(handler);
 			l.addMouseMotionListener(handler);
 			label[i] = l;
@@ -176,44 +214,8 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 
 		@Override
 		public void mousePressed(java.awt.event.MouseEvent e) {
-
-			if (e.getSource() == trash) {
-				phoneNumber.setForeground(Color.BLACK);
-				phoneNumber.setText("CLEAN! ♥‿♥");
-				try {
-					icons = imgFormat.colorizeIcons(sizeImg, Color.LIGHT_GRAY, 13, Color.GREEN, icons);
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-
-				contAnimation = 0;
-				contTrash = 0;
-				selectedLabel = 999;
-				resizeIcons();
-				resetPosition();
-				isAnySet = false;
-			}
-
-			for (int i = 0; i < label.length; i++) {
-				if (e.getSource().equals(label[i])) {
-					try {
-						phoneNumber.setForeground(Color.BLACK);
-						if (phoneNumber.getText().equals("CLEAN! ♥‿♥") || phoneNumber.getText().equals("HI! ʘ‿ʘ")) {
-							phoneNumber.setText("");
-						}
-						selectedLabel = 999;
-						resizeIcons();
-						resetPosition();
-						label[i].setIcon(imgFormat.colorizeIcon(sizeImg + 10, i, Color.green));
-						selectedLabel = i;
-						phoneNumber.setText(phoneNumber.getText() + getIcoName(i));
-						isAnySet = true;
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
-				}
-			}
-
+			trashMP(e);
+			numberMP(e);
 		}
 
 		@Override
@@ -255,57 +257,41 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
-		if (e.getSource() == timeColor && !isAnySet) {
-			contAnimation++;
-			if (contAnimation > 20 && contAnimation <= 33) {
-				int j = (int) (Math.random() * 7);
-				int k = (int) (Math.random() * 7);
+		colorAnimation(e);
 
-				if (contAnimation <= 32) {
-					try {
-						phoneNumber.setForeground(colors[k]);
-						label[contAnimation - 21]
-								.setIcon(imgFormat.colorizeIcon(sizeImg + 10, contAnimation - 21, colors[j]));
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
+		if (e.getSource() == mnuSaveNum) {
+			System.err.println("mnuSaveNum");
+			fc=new JFileChooser();
+			fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			fc.setDialogTitle("Select the directory to save file");
 
-					if (contAnimation % 2 == 0) {
-						try {
-							trash.setIcon(imgFormat.colorizeIcon(topLineSize, 12, colors[j]));
-						} catch (IOException e1) {
-							e1.printStackTrace();
-						}
-					} else {
-						try {
-							trash.setIcon(imgFormat.colorizeIcon(topLineImgSize, 12, Color.LIGHT_GRAY));
-						} catch (IOException e1) {
-							e1.printStackTrace();
-						}
-					}
-				}
+			fcSelected=fc.showOpenDialog(this);
 
-				if (contAnimation > 21 && contAnimation <= 33) {
-					try {
-						label[contAnimation - 22]
-								.setIcon(imgFormat.colorizeIcon(sizeImg, contAnimation - 22, Color.LIGHT_GRAY));
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
-				}
-			} else if (contAnimation > 33) {
-				phoneNumber.setForeground(Color.BLACK);
-				contAnimation = 0;
-				try {
-					trash.setIcon(imgFormat.colorizeIcon(topLineImgSize, 12, Color.LIGHT_GRAY));
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+			if(fc.getSelectedFile().isDirectory()){
+
 			}
 
+
+		}
+		if (e.getSource() == mnuReadNum) {
+			System.err.println("mnuRead");
+		}
+		if (e.getSource() == mnuReset) {
+			System.err.println("mnuReset");
+		}
+		if (e.getSource() == mnuSplit) {
+			System.err.println("mnuSplit");
+		}
+		if (e.getSource() == mnuExit) {
+			System.err.println("mnuExit");
+		}
+
+		if (e.getSource() == mnuAbout) {
+			System.err.println("mnuAbout");
 		}
 
 	}
+
 
 	@Override
 	public void keyTyped(KeyEvent e) {
@@ -416,6 +402,99 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 		}
 
 		return iReturn;
+	}
+
+	private void numberMP(java.awt.event.MouseEvent e) {
+		for (int i = 0; i < label.length; i++) {
+			if (e.getSource().equals(label[i])) {
+				try {
+					phoneNumber.setForeground(Color.BLACK);
+					if (phoneNumber.getText().equals("CLEAN! ♥‿♥") || phoneNumber.getText().equals("HI! ʘ‿ʘ")) {
+						phoneNumber.setText("");
+					}
+					selectedLabel = 999;
+					resizeIcons();
+					resetPosition();
+					label[i].setIcon(imgFormat.colorizeIcon(sizeImg + 10, i, Color.green));
+					selectedLabel = i;
+					phoneNumber.setText(phoneNumber.getText() + getIcoName(i));
+					isAnySet = true;
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		}
+	}
+
+	private void trashMP(java.awt.event.MouseEvent e) {
+		if (e.getSource() == trash) {
+			phoneNumber.setForeground(Color.BLACK);
+			phoneNumber.setText("CLEAN! ♥‿♥");
+			try {
+				icons = imgFormat.colorizeIcons(sizeImg, Color.LIGHT_GRAY, 13, Color.GREEN, icons);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+
+			contAnimation = 0;
+			selectedLabel = 999;
+			resizeIcons();
+			resetPosition();
+			isAnySet = false;
+		}
+	}
+
+	private void colorAnimation(ActionEvent e) {
+		if (e.getSource() == timeColor && !isAnySet) {
+			contAnimation++;
+
+			if (contAnimation > 20 && contAnimation <= 33) {
+				int j = (int) (Math.random() * 7);
+				int k = (int) (Math.random() * 7);
+
+				if (contAnimation <= 32) {
+					try {
+						phoneNumber.setForeground(colors[k]);
+						label[contAnimation - 21]
+								.setIcon(imgFormat.colorizeIcon(sizeImg + 10, contAnimation - 21, colors[j]));
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+
+					if (contAnimation % 2 == 0) {
+						try {
+							trash.setIcon(imgFormat.colorizeIcon(topLineSize, 12, colors[j]));
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+					} else {
+						try {
+							trash.setIcon(imgFormat.colorizeIcon(topLineImgSize, 12, Color.LIGHT_GRAY));
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+					}
+				}
+
+				if (contAnimation > 21 && contAnimation <= 33) {
+					try {
+						label[contAnimation - 22]
+								.setIcon(imgFormat.colorizeIcon(sizeImg, contAnimation - 22, Color.LIGHT_GRAY));
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				}
+			} else if (contAnimation > 33) {
+				phoneNumber.setForeground(Color.BLACK);
+				contAnimation = 0;
+				try {
+					trash.setIcon(imgFormat.colorizeIcon(topLineImgSize, 12, Color.LIGHT_GRAY));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+
+		}
 	}
 
 }
