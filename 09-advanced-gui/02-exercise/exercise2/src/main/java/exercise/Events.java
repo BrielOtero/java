@@ -3,6 +3,7 @@ package exercise;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.MouseInfo;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -10,7 +11,10 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+
 import javax.swing.Timer;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
@@ -19,6 +23,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 public class Events extends JDialog implements ActionListener, KeyListener {
@@ -41,12 +46,15 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 
 	ImgFormat imgFormat = new ImgFormat();
 	ImageIcon[] icons;
-	
+
 	int selectedLabel = 999;
 
 	int fcSelected;
 
 	boolean isAnySet = false;
+	boolean pauseAni = false;
+
+	String nameToFile = "";
 
 	// Components
 	JLabel[] label;
@@ -61,8 +69,6 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 	JMenuItem mnuSaveNum, mnuReadNum, mnuReset, mnuSplit, mnuExit, mnuAbout;
 	JMenu mnuMobile;
 	JMenu mnuOthers;
-
-	
 
 	public Events() throws IOException {
 
@@ -134,6 +140,9 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 		phoneNumber.setBorder(javax.swing.BorderFactory.createEmptyBorder());
 		phoneNumber.setLocation(25, 25);
 		add(phoneNumber);
+		
+
+		
 
 		trash = new JLabel(imgFormat.colorizeIcon(topLineImgSize, 12, Color.LIGHT_GRAY));
 		trash.setLocation(phoneNumber.getWidth() + 30, 25);
@@ -144,6 +153,7 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 
 		label = new JLabel[12];
 		icons = imgFormat.generateIcons(sizeImg);
+	
 
 		for (int i = 0; i < label.length; i++) {
 
@@ -206,6 +216,9 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 
 		@Override
 		public void mouseMoved(java.awt.event.MouseEvent e) {
+			System.err.println("as");
+
+		
 		}
 
 		@Override
@@ -251,6 +264,7 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 					}
 				}
 			}
+
 		}
 	}
 
@@ -259,29 +273,27 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 
 		colorAnimation(e);
 
-		if (e.getSource() == mnuSaveNum) {
-			System.err.println("mnuSaveNum");
-			fc=new JFileChooser();
+		if (e.getSource() == mnuReadNum || e.getSource() == mnuSaveNum) {
+			fc = new JFileChooser();
 			fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-			fc.setDialogTitle("Select the directory to save file");
 
-			fcSelected=fc.showOpenDialog(this);
+			mnuSaveAlgo(e);
 
-			if(fc.getSelectedFile().isDirectory()){
+			if (e.getSource() == mnuReadNum) {
+				System.err.println("mnuRead");
 
 			}
 
+		}
 
-		}
-		if (e.getSource() == mnuReadNum) {
-			System.err.println("mnuRead");
-		}
 		if (e.getSource() == mnuReset) {
 			System.err.println("mnuReset");
 		}
+
 		if (e.getSource() == mnuSplit) {
 			System.err.println("mnuSplit");
 		}
+
 		if (e.getSource() == mnuExit) {
 			System.err.println("mnuExit");
 		}
@@ -291,7 +303,6 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 		}
 
 	}
-
 
 	@Override
 	public void keyTyped(KeyEvent e) {
@@ -445,53 +456,105 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 	}
 
 	private void colorAnimation(ActionEvent e) {
-		if (e.getSource() == timeColor && !isAnySet) {
+		if (e.getSource() == timeColor && !isAnySet && !pauseAni) {
 			contAnimation++;
 
 			if (contAnimation > 20 && contAnimation <= 33) {
 				int j = (int) (Math.random() * 7);
-				int k = (int) (Math.random() * 7);
 
-				if (contAnimation <= 32) {
+				if (contAnimation != 33) {
+
 					try {
-						phoneNumber.setForeground(colors[k]);
+						phoneNumber.setFont(new Font("JeBrains Mono", Font.BOLD, fontSize + 10));
+						phoneNumber.setForeground(colors[j]);
+
 						label[contAnimation - 21]
 								.setIcon(imgFormat.colorizeIcon(sizeImg + 10, contAnimation - 21, colors[j]));
+
+						trash.setIcon(imgFormat.colorizeIcon(topLineSize, 12, colors[j]));
+
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
-
-					if (contAnimation % 2 == 0) {
-						try {
-							trash.setIcon(imgFormat.colorizeIcon(topLineSize, 12, colors[j]));
-						} catch (IOException e1) {
-							e1.printStackTrace();
-						}
-					} else {
-						try {
-							trash.setIcon(imgFormat.colorizeIcon(topLineImgSize, 12, Color.LIGHT_GRAY));
-						} catch (IOException e1) {
-							e1.printStackTrace();
-						}
-					}
 				}
 
-				if (contAnimation > 21 && contAnimation <= 33) {
-					try {
+				try {
+					Thread.sleep(200);
+				} catch (InterruptedException e2) {
+					System.err.println("Sleep Error");
+					e2.printStackTrace();
+				}
+
+				try {
+					if (contAnimation > 21) {
+
 						label[contAnimation - 22]
 								.setIcon(imgFormat.colorizeIcon(sizeImg, contAnimation - 22, Color.LIGHT_GRAY));
-					} catch (IOException e1) {
-						e1.printStackTrace();
 					}
+
+					phoneNumber.setFont(new Font("JeBrains Mono", Font.BOLD, fontSize));
+
+				} catch (IOException e1) {
+					e1.printStackTrace();
 				}
-			} else if (contAnimation > 33) {
+
+			} else if (contAnimation > 32) {
 				phoneNumber.setForeground(Color.BLACK);
+				phoneNumber.setFont(new Font("JeBrains Mono", Font.BOLD, fontSize));
 				contAnimation = 0;
 				try {
 					trash.setIcon(imgFormat.colorizeIcon(topLineImgSize, 12, Color.LIGHT_GRAY));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
+			}
+
+		}
+	}
+
+	private void mnuSaveAlgo(ActionEvent e) {
+		if (e.getSource() == mnuSaveNum) {
+
+			System.err.println("mnuSaveNum");
+			boolean errorSave = false;
+
+			fc.setDialogTitle("Select the directory to save file");
+			fcSelected = fc.showOpenDialog(this);
+
+			if (fcSelected == JFileChooser.APPROVE_OPTION) {
+
+				if (fc.getSelectedFile().isDirectory()) {
+
+					nameToFile = JOptionPane.showInputDialog(this, "Please insert the name of the file", "Pick a name",
+							JOptionPane.QUESTION_MESSAGE);
+
+					try (PrintWriter pw = new PrintWriter(fc.getSelectedFile().getPath() + File.separator
+							+ nameToFile + ".txt")) {
+
+						if (!phoneNumber.getText().contains("!")) {
+							pw.println(phoneNumber.getText());
+						} else {
+							pw.println("");
+						}
+
+					} catch (IOException j) {
+						errorSave = true;
+					}
+					System.err.println("Exit");
+				} else {
+					errorSave = true;
+				}
+
+			} else {
+				errorSave = true;
+			}
+
+			if (errorSave) {
+				JOptionPane.showMessageDialog(this, "Could not create file", "Error", JOptionPane.ERROR_MESSAGE);
+			} else {
+				JOptionPane.showMessageDialog(this, "The file was created successfully", "Good news",
+						JOptionPane.INFORMATION_MESSAGE);
+
 			}
 
 		}
