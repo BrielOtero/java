@@ -1,30 +1,9 @@
 package exercise;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.MouseInfo;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseAdapter;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-
-import javax.swing.Timer;
-import javax.swing.ImageIcon;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import javax.swing.*;
 
 public class Events extends JDialog implements ActionListener, KeyListener {
 	JTextField phoneNumber;
@@ -140,9 +119,6 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 		phoneNumber.setBorder(javax.swing.BorderFactory.createEmptyBorder());
 		phoneNumber.setLocation(25, 25);
 		add(phoneNumber);
-		
-
-		
 
 		trash = new JLabel(imgFormat.colorizeIcon(topLineImgSize, 12, Color.LIGHT_GRAY));
 		trash.setLocation(phoneNumber.getWidth() + 30, 25);
@@ -153,7 +129,6 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 
 		label = new JLabel[12];
 		icons = imgFormat.generateIcons(sizeImg);
-	
 
 		for (int i = 0; i < label.length; i++) {
 
@@ -206,6 +181,8 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 			}
 		});
 		addKeyListener(this);
+		addMouseListener(handler);
+		addMouseMotionListener(handler);
 	}
 
 	private class MouseHandler extends MouseAdapter {
@@ -216,9 +193,6 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 
 		@Override
 		public void mouseMoved(java.awt.event.MouseEvent e) {
-			System.err.println("as");
-
-		
 		}
 
 		@Override
@@ -237,39 +211,43 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 
 		@Override
 		public void mouseEntered(java.awt.event.MouseEvent e) {
+				for (int i = 0; i < label.length; i++) {
+					if (i != selectedLabel) {
+						if (e.getSource().equals(label[i])) {
 
-			for (int i = 0; i < label.length; i++) {
-				if (i != selectedLabel) {
-					if (e.getSource().equals(label[i])) {
+							try {
+								label[i].setIcon(imgFormat.colorizeIcon(sizeImg, i, Color.BLACK));
+							} catch (IOException e1) {
+								e1.printStackTrace();
+							}
+						}
+					}
+				}
+		
+		}
 
+		@Override
+		public void mouseExited(java.awt.event.MouseEvent e) {
+			
+				for (int i = 0; i < label.length; i++) {
+					if (i != selectedLabel) {
 						try {
-							label[i].setIcon(imgFormat.colorizeIcon(sizeImg, i, Color.BLACK));
+							label[i].setIcon(imgFormat.colorizeIcon(sizeImg, i, Color.LIGHT_GRAY));
 						} catch (IOException e1) {
 							e1.printStackTrace();
 						}
 					}
 				}
-			}
-		}
-
-		@Override
-		public void mouseExited(java.awt.event.MouseEvent e) {
-
-			for (int i = 0; i < label.length; i++) {
-				if (i != selectedLabel) {
-					try {
-						label[i].setIcon(imgFormat.colorizeIcon(sizeImg, i, Color.LIGHT_GRAY));
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
-				}
-			}
 
 		}
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+
+		System.out.println(MouseInfo.getPointerInfo().getLocation().getX());
+
+
 
 		colorAnimation(e);
 
