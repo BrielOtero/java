@@ -3,6 +3,7 @@ package exercise;
 
 import java.io.IOException;
 
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 
 public class Application {
@@ -11,7 +12,7 @@ public class Application {
 
 	Events events = new Events();
 	events.setSize(330,530);
-	events.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	events.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 	events.setLocationRelativeTo(null);
 	events.setVisible(true);
 	

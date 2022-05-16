@@ -9,7 +9,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Events extends JDialog implements ActionListener, KeyListener {
-	JTextField phoneNumber;
+	JTextField tfPhoneNumber;
 
 	// Format
 	int size = 80;
@@ -42,10 +42,10 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 	ImageIcon[] icons;
 
 	// Components
-	JLabel[] label;
-	JLabel trash;
-	Timer timeColor;
-	Timer timeTrash;
+	JLabel[] lblLabel;
+	JLabel lblTrash;
+	Timer timerColor;
+	Timer timerTrash;
 	JFileChooser fc;
 
 	// Creating a menu bar, a menu, and menu items.
@@ -71,33 +71,33 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 		// Creating a new timer object called timeColor. The timer is set to 300
 		// milliseconds and the action
 		// listener is set to the class that contains the code.
-		timeColor = new Timer(300, this);
-		timeColor.start();
+		timerColor = new Timer(300, this);
+		timerColor.start();
 
 		// Creating a text field that is not editable.
-		phoneNumber = new JTextField("HI! ʘ‿ʘ");
-		phoneNumber.setEditable(false);
-		phoneNumber.setFont(new Font("JeBrains Mono", Font.BOLD, fontSize));
-		phoneNumber.setSize(220, topLineSize);
-		phoneNumber.setBorder(javax.swing.BorderFactory.createEmptyBorder());
-		phoneNumber.addMouseListener(handler);
-		phoneNumber.addMouseMotionListener(handler);
-		phoneNumber.setLocation(25, 25);
-		add(phoneNumber);
+		tfPhoneNumber = new JTextField("HI! ʘ‿ʘ");
+		tfPhoneNumber.setEditable(false);
+		tfPhoneNumber.setFont(new Font("JeBrains Mono", Font.BOLD, fontSize));
+		tfPhoneNumber.setSize(220, topLineSize);
+		tfPhoneNumber.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		tfPhoneNumber.addMouseListener(handler);
+		tfPhoneNumber.addMouseMotionListener(handler);
+		tfPhoneNumber.setLocation(25, 25);
+		add(tfPhoneNumber);
 
 		// Creating a new JLabel with the image of a trash can.
-		trash = new JLabel(imgFormat.colorizeIcon(topLineImgSize, 12, Color.LIGHT_GRAY));
-		trash.setLocation(phoneNumber.getWidth() + 30, 25);
-		trash.setSize(topLineSize, topLineSize);
-		trash.addMouseListener(handler);
-		trash.addMouseMotionListener(handler);
-		add(trash);
+		lblTrash = new JLabel(imgFormat.colorizeIcon(topLineImgSize, 12, Color.LIGHT_GRAY));
+		lblTrash.setLocation(tfPhoneNumber.getWidth() + 30, 25);
+		lblTrash.setSize(topLineSize, topLineSize);
+		lblTrash.addMouseListener(handler);
+		lblTrash.addMouseMotionListener(handler);
+		add(lblTrash);
 
 		// Creating a label that will display the number of the question.
 		creatingNumberLabel(handler);
 
 		// Setting the size of the frame to the size of the label plus 100.
-		setSize(new Dimension(getWidth(), label[11].getY() + size + 100));
+		setSize(new Dimension(getWidth(), lblLabel[11].getY() + size + 100));
 
 		// Adding a key listener and a mouse listener to the JFrame.
 		addKeyListener(this);
@@ -122,12 +122,12 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 					resizeIcons();
 					resetPosition();
 
-					phoneNumber.setSize(getWidth() - 120, topLineSize);
+					tfPhoneNumber.setSize(getWidth() - 120, topLineSize);
 
-					trash.setLocation(phoneNumber.getWidth() + 30, 25);
+					lblTrash.setLocation(tfPhoneNumber.getWidth() + 30, 25);
 					historyX = getContentPane().getWidth();
 					revalidate();
-					setSize(new Dimension(getWidth(), label[11].getY() + size + 100));
+					setSize(new Dimension(getWidth(), lblLabel[11].getY() + size + 100));
 					// repaint();
 				}
 			}
@@ -168,12 +168,12 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 		public void mouseEntered(java.awt.event.MouseEvent e) {
 
 			// Looping through the array of JLabels and setting the icon to the colorized version of the image.
-			for (int i = 0; i < label.length; i++) {
+			for (int i = 0; i < lblLabel.length; i++) {
 				if (i != selectedLabel) {
-					if (e.getSource().equals(label[i])) {
+					if (e.getSource().equals(lblLabel[i])) {
 
 						try {
-							label[i].setIcon(imgFormat.colorizeIcon(sizeImg, i, Color.BLACK));
+							lblLabel[i].setIcon(imgFormat.colorizeIcon(sizeImg, i, Color.BLACK));
 						} catch (IOException e1) {
 							e1.printStackTrace();
 						}
@@ -187,10 +187,10 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 		public void mouseExited(java.awt.event.MouseEvent e) {
 
 			// Looping through the array of labels and setting the icon to a grayed out version of the icon.
-			for (int i = 0; i < label.length; i++) {
+			for (int i = 0; i < lblLabel.length; i++) {
 				if (i != selectedLabel) {
 					try {
-						label[i].setIcon(imgFormat.colorizeIcon(sizeImg, i, Color.LIGHT_GRAY));
+						lblLabel[i].setIcon(imgFormat.colorizeIcon(sizeImg, i, Color.LIGHT_GRAY));
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
@@ -254,9 +254,9 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 
 		// A code snippet from a Java program that is used to create a phone number pad.
 		if (validKey) {
-			phoneNumber.setForeground(Color.BLACK);
-			if (phoneNumber.getText().equals("CLEAN! ♥‿♥") || phoneNumber.getText().equals("HI! ʘ‿ʘ")) {
-				phoneNumber.setText("");
+			tfPhoneNumber.setForeground(Color.BLACK);
+			if (tfPhoneNumber.getText().equals("CLEAN! ♥‿♥") || tfPhoneNumber.getText().equals("HI! ʘ‿ʘ")) {
+				tfPhoneNumber.setText("");
 			}
 
 			if (keyValue == '*') {
@@ -272,9 +272,9 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 				selectedLabel = 999;
 				resizeIcons();
 				resetPosition();
-				label[keyIndex].setIcon(imgFormat.colorizeIcon(sizeImg + 10, keyIndex, Color.green));
+				lblLabel[keyIndex].setIcon(imgFormat.colorizeIcon(sizeImg + 10, keyIndex, Color.green));
 				selectedLabel = keyIndex;
-				phoneNumber.setText(phoneNumber.getText() + getIcoName(keyIndex));
+				tfPhoneNumber.setText(tfPhoneNumber.getText() + getIcoName(keyIndex));
 				isAnySet = true;
 			} catch (IOException e1) {
 				e1.printStackTrace();
@@ -372,32 +372,32 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 	 */
 	private void creatingNumberLabel(MouseHandler handler) throws IOException {
 
-		label = new JLabel[12];
+		lblLabel = new JLabel[12];
 		icons = imgFormat.generateIcons(sizeImg);
 
-		for (int i = 0; i < label.length; i++) {
+		for (int i = 0; i < lblLabel.length; i++) {
 
 			JLabel l = new JLabel(icons[i]);
 			l.setSize(size, size);
 
 			if (i == 0) {
 				// 1
-				l.setLocation(25, phoneNumber.getY() + phoneNumber.getHeight() + separation);
+				l.setLocation(25, tfPhoneNumber.getY() + tfPhoneNumber.getHeight() + separation);
 			} else if (i == 1 || i == 2 || i == 4 || i == 5 || i == 7 || i == 8 || i == 10 || i == 11) {
 				// 2 3 5 6 8 9 Zero Pad
-				l.setLocation(label[i - 1].getX() + size + separation, label[i - 1].getY());
+				l.setLocation(lblLabel[i - 1].getX() + size + separation, lblLabel[i - 1].getY());
 			} else {
 				// 4 7 Asterisk
-				l.setLocation(25, label[i - 3].getY() + size + separation);
+				l.setLocation(25, lblLabel[i - 3].getY() + size + separation);
 			}
 
 			l.addMouseListener(handler);
 			l.addMouseMotionListener(handler);
-			label[i] = l;
+			lblLabel[i] = l;
 		}
 
-		for (int i = 0; i < label.length; i++) {
-			this.add(label[i]);
+		for (int i = 0; i < lblLabel.length; i++) {
+			this.add(lblLabel[i]);
 		}
 	}
 
@@ -407,18 +407,18 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 	 * plus the separation
 	 */
 	private void resetPosition() {
-		for (int i = 0; i < label.length; i++) {
-			label[i].setIcon(icons[i]);
-			label[i].setSize(size, size);
+		for (int i = 0; i < lblLabel.length; i++) {
+			lblLabel[i].setIcon(icons[i]);
+			lblLabel[i].setSize(size, size);
 			if (i == 0) {
 				// 1
-				label[i].setLocation(25, phoneNumber.getY() + phoneNumber.getHeight() + separation);
+				lblLabel[i].setLocation(25, tfPhoneNumber.getY() + tfPhoneNumber.getHeight() + separation);
 			} else if (i == 1 || i == 2 || i == 4 || i == 5 || i == 7 || i == 8 || i == 10 || i == 11) {
 				// 2 3 5 6 8 9 Zero Pad
-				label[i].setLocation(label[i - 1].getX() + size + separation, label[i - 1].getY());
+				lblLabel[i].setLocation(lblLabel[i - 1].getX() + size + separation, lblLabel[i - 1].getY());
 			} else {
 				// 4 7 Asterisk
-				label[i].setLocation(25, label[i - 3].getY() + size + separation);
+				lblLabel[i].setLocation(25, lblLabel[i - 3].getY() + size + separation);
 			}
 		}
 	}
@@ -479,19 +479,19 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 	 * @param e the mouse event
 	 */
 	private void numberMP(java.awt.event.MouseEvent e) {
-		for (int i = 0; i < label.length; i++) {
-			if (e.getSource().equals(label[i])) {
+		for (int i = 0; i < lblLabel.length; i++) {
+			if (e.getSource().equals(lblLabel[i])) {
 				try {
-					phoneNumber.setForeground(Color.BLACK);
-					if (phoneNumber.getText().equals("CLEAN! ♥‿♥") || phoneNumber.getText().equals("HI! ʘ‿ʘ")) {
-						phoneNumber.setText("");
+					tfPhoneNumber.setForeground(Color.BLACK);
+					if (tfPhoneNumber.getText().equals("CLEAN! ♥‿♥") || tfPhoneNumber.getText().equals("HI! ʘ‿ʘ")) {
+						tfPhoneNumber.setText("");
 					}
 					selectedLabel = 999;
 					resizeIcons();
 					resetPosition();
-					label[i].setIcon(imgFormat.colorizeIcon(sizeImg + 10, i, Color.green));
+					lblLabel[i].setIcon(imgFormat.colorizeIcon(sizeImg + 10, i, Color.green));
 					selectedLabel = i;
-					phoneNumber.setText(phoneNumber.getText() + getIcoName(i));
+					tfPhoneNumber.setText(tfPhoneNumber.getText() + getIcoName(i));
 					isAnySet = true;
 				} catch (IOException e1) {
 					e1.printStackTrace();
@@ -507,9 +507,9 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 	 * @param e the mouse event
 	 */
 	private void trashMP(java.awt.event.MouseEvent e) {
-		if (e.getSource() == trash) {
-			phoneNumber.setForeground(Color.BLACK);
-			phoneNumber.setText("CLEAN! ♥‿♥");
+		if (e.getSource() == lblTrash) {
+			tfPhoneNumber.setForeground(Color.BLACK);
+			tfPhoneNumber.setText("CLEAN! ♥‿♥");
 			try {
 				icons = imgFormat.colorizeIcons(sizeImg, Color.LIGHT_GRAY, 13, Color.GREEN, icons);
 			} catch (IOException e1) {
@@ -538,7 +538,7 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 			pauseAni = false;
 		}
 
-		if (e.getSource() == timeColor && !isAnySet && !pauseAni) {
+		if (e.getSource() == timerColor && !isAnySet && !pauseAni) {
 			contAnimation++;
 
 			// Changing the color of the text and the icons.
@@ -548,13 +548,13 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 				if (contAnimation != 33) {
 
 					try {
-						phoneNumber.setFont(new Font("JeBrains Mono", Font.BOLD, fontSize + 10));
-						phoneNumber.setForeground(colors[j]);
+						tfPhoneNumber.setFont(new Font("JeBrains Mono", Font.BOLD, fontSize + 10));
+						tfPhoneNumber.setForeground(colors[j]);
 
-						label[contAnimation - 21]
+						lblLabel[contAnimation - 21]
 								.setIcon(imgFormat.colorizeIcon(sizeImg + 10, contAnimation - 21, colors[j]));
 
-						trash.setIcon(imgFormat.colorizeIcon(topLineSize, 12, colors[j]));
+						lblTrash.setIcon(imgFormat.colorizeIcon(topLineSize, 12, colors[j]));
 
 					} catch (IOException e1) {
 						e1.printStackTrace();
@@ -571,22 +571,22 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 				try {
 					if (contAnimation > 21) {
 
-						label[contAnimation - 22]
+						lblLabel[contAnimation - 22]
 								.setIcon(imgFormat.colorizeIcon(sizeImg, contAnimation - 22, Color.LIGHT_GRAY));
 					}
 
-					phoneNumber.setFont(new Font("JeBrains Mono", Font.BOLD, fontSize));
+					tfPhoneNumber.setFont(new Font("JeBrains Mono", Font.BOLD, fontSize));
 
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
 
 			} else if (contAnimation > 32) {
-				phoneNumber.setForeground(Color.BLACK);
-				phoneNumber.setFont(new Font("JeBrains Mono", Font.BOLD, fontSize));
+				tfPhoneNumber.setForeground(Color.BLACK);
+				tfPhoneNumber.setFont(new Font("JeBrains Mono", Font.BOLD, fontSize));
 				contAnimation = 0;
 				try {
-					trash.setIcon(imgFormat.colorizeIcon(topLineImgSize, 12, Color.LIGHT_GRAY));
+					lblTrash.setIcon(imgFormat.colorizeIcon(topLineImgSize, 12, Color.LIGHT_GRAY));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -596,13 +596,13 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 
 		// Setting the color of the phone number to black and setting the font to JeBrains Mono.
 		if (pauseAni) {
-			phoneNumber.setForeground(Color.BLACK);
-			phoneNumber.setFont(new Font("JeBrains Mono", Font.BOLD, fontSize));
+			tfPhoneNumber.setForeground(Color.BLACK);
+			tfPhoneNumber.setFont(new Font("JeBrains Mono", Font.BOLD, fontSize));
 
 			try {
-				trash.setIcon(imgFormat.colorizeIcon(topLineImgSize, 12, Color.LIGHT_GRAY));
+				lblTrash.setIcon(imgFormat.colorizeIcon(topLineImgSize, 12, Color.LIGHT_GRAY));
 				if (contAnimation > 20 && contAnimation < 33) {
-					label[contAnimation - 21]
+					lblLabel[contAnimation - 21]
 							.setIcon(imgFormat.colorizeIcon(sizeImg, contAnimation - 21, Color.LIGHT_GRAY));
 				}
 			} catch (IOException e1) {
@@ -639,8 +639,8 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 					try (PrintWriter pw = new PrintWriter(fc.getSelectedFile().getPath() + File.separator
 							+ nameToFile + ".txt")) {
 
-						if (!phoneNumber.getText().contains("!")) {
-							pw.println(phoneNumber.getText());
+						if (!tfPhoneNumber.getText().contains("!")) {
+							pw.println(tfPhoneNumber.getText());
 						} else {
 							pw.println("");
 						}
@@ -714,7 +714,7 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 				JOptionPane.showMessageDialog(this, "Could not read file", "Err"
 						+ "or", JOptionPane.ERROR_MESSAGE);
 			} else {
-				phoneNumber.setText(fileContent);
+				tfPhoneNumber.setText(fileContent);
 
 			}
 
@@ -731,8 +731,8 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 		if (e.getSource() == mnuReset) {
 			System.err.println("mnuReset");
 
-			phoneNumber.setForeground(Color.BLACK);
-			phoneNumber.setText("CLEAN! ♥‿♥");
+			tfPhoneNumber.setForeground(Color.BLACK);
+			tfPhoneNumber.setText("CLEAN! ♥‿♥");
 
 			try {
 				icons = imgFormat.colorizeIcons(sizeImg, Color.LIGHT_GRAY, 13, Color.GREEN, icons);
@@ -757,9 +757,9 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 	private void mnuSplitAlgo(ActionEvent e) {
 		if (e.getSource() == mnuSplit) {
 			System.err.println("mnuSplit");
-			String[] phoneNumberValue = phoneNumber.getText().split("");
+			String[] phoneNumberValue = tfPhoneNumber.getText().split("");
 			String phoneNumberSplit = "";
-			if (!phoneNumber.getText().equals("CLEAN! ♥‿♥") && !phoneNumber.getText().equals("HI! ʘ‿ʘ")) {
+			if (!tfPhoneNumber.getText().equals("CLEAN! ♥‿♥") && !tfPhoneNumber.getText().equals("HI! ʘ‿ʘ")) {
 
 				for (int i = 0; i < phoneNumberValue.length; i++) {
 					if (i % 3 == 0 && i != 0) {
@@ -769,7 +769,7 @@ public class Events extends JDialog implements ActionListener, KeyListener {
 					}
 				}
 
-				phoneNumber.setText(phoneNumberSplit);
+				tfPhoneNumber.setText(phoneNumberSplit);
 			}
 
 		}
