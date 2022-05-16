@@ -10,13 +10,10 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Path;
 import java.util.Locale;
 import java.util.Scanner;
 
-import javax.sound.midi.Patch;
 import javax.swing.ButtonGroup;
-import javax.swing.ButtonModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -59,6 +56,7 @@ public class Events extends JDialog implements ActionListener, ItemListener {
 	double rightValue = 0;
 	boolean error = false;
 	boolean firstBoot = true;
+	boolean readsuccessfully=true;
 
 	String[] decimals = { "0", "1", "2", "3", "4", "5" };
 
@@ -79,8 +77,10 @@ public class Events extends JDialog implements ActionListener, ItemListener {
 			result = Double.parseDouble(fileContSplit[3]);
 			selectedDecimals = Integer.parseInt(fileContSplit[4]);
 
+
 		} catch (IOException j) {
 			System.err.println("Error Reading File");
+			readsuccessfully=false;
 		}
 
 		rbSum = new JRadioButton("Sum");
@@ -88,6 +88,7 @@ public class Events extends JDialog implements ActionListener, ItemListener {
 		rbSum.setActionCommand("0");
 		rbSum.setLocation(25, symbolCalYLoc);
 		rbSum.setSize(70, symbolCalheight);
+		rbSum.addActionListener(this);
 		rbSum.addItemListener(this);
 
 		rbSubtraction = new JRadioButton("Subtraction");
@@ -95,6 +96,7 @@ public class Events extends JDialog implements ActionListener, ItemListener {
 		rbSubtraction.setLocation(25, rbSum.getY() + rbSum.getSize().height);
 		rbSubtraction.setActionCommand("1");
 		rbSubtraction.setSize(100, symbolCalheight);
+		rbSubtraction.addActionListener(this);
 		rbSubtraction.addItemListener(this);
 
 		rbMultiplication = new JRadioButton("Multiplication");
@@ -102,6 +104,7 @@ public class Events extends JDialog implements ActionListener, ItemListener {
 		rbMultiplication.setActionCommand("2");
 		rbMultiplication.setLocation(25, rbSubtraction.getY() + rbSubtraction.getSize().height);
 		rbMultiplication.setSize(100, symbolCalheight);
+		rbMultiplication.addActionListener(this);
 		rbMultiplication.addItemListener(this);
 
 		rbDivision = new JRadioButton("Division");
@@ -109,6 +112,7 @@ public class Events extends JDialog implements ActionListener, ItemListener {
 		rbDivision.setActionCommand("3");
 		rbDivision.setLocation(25, rbMultiplication.getY() + rbMultiplication.getSize().height);
 		rbDivision.setSize(100, symbolCalheight);
+		rbDivision.addActionListener(this);
 		rbDivision.addItemListener(this);
 
 		setSelectedOperation();
@@ -172,6 +176,12 @@ public class Events extends JDialog implements ActionListener, ItemListener {
 		lblError.setSize(200, 50);
 		add(lblError);
 
+		if(readsuccessfully){
+			tfLeft.setText(String.format("%f",leftValue));
+			tfRight.setText(String.format("%f",rightValue));
+			lblEqual.setText(String.format("=%f",result));
+		}
+
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -201,6 +211,13 @@ public class Events extends JDialog implements ActionListener, ItemListener {
 			showResult();
 		}
 
+		if(e.getSource()==rbSum || e.getSource()==rbSubtraction || e.getSource()==rbMultiplication || e.getSource()==rbDivision   ){
+	
+		selectedOperation=e.getActionCommand();
+
+			
+		}
+
 	}
 
 	@Override
@@ -227,11 +244,7 @@ public class Events extends JDialog implements ActionListener, ItemListener {
 			selectedDecimals=cbDecimals.getSelectedIndex();				
 				calculatorAlgo();
 				showResult();
-			}
-
-		
-
-		
+			}	
 		}
 
 
@@ -283,26 +296,8 @@ public class Events extends JDialog implements ActionListener, ItemListener {
 	private void setSelectedOperation() {
 		int i = Integer.parseInt(selectedOperation);
 
-		switch (i) {
-			case 0:
-
-				rbSum.setSelected(true);
-
-				break;
-			case 1:
-				rbSubtraction.setSelected(true);
-
-				break;
-			case 2:
-				rbMultiplication.setSelected(true);
-
-				break;
-			case 3:
-				rbDivision.setSelected(true);
-
-				break;
-
-		}
+		JRadioButton[] rbButtons={rbSum,rbSubtraction,rbMultiplication,rbDivision};
+		rbButtons[i].setSelected(true);
 	}
 
 }
