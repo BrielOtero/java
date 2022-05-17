@@ -9,6 +9,6 @@ public class Application {
 	events.setLocationRelativeTo(null);
 	events.setVisible(true);
 	events.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-	events.setSize(600,350);
+	events.setSize(580,380);
   }
 }

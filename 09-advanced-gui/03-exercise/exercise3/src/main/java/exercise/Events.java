@@ -1,25 +1,11 @@
 package exercise;
 
-import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Locale;
-import java.util.Scanner;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import java.util.*;
+import javax.swing.*;
 
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
 
 public class Events extends JDialog implements ActionListener, ItemListener {
 
@@ -45,6 +31,9 @@ public class Events extends JDialog implements ActionListener, ItemListener {
 	int symbolCalheight = 20;
 	int numberDecimals = 2;
 
+	int indexLV;
+	int indexRV;
+
 	String selectedOperation = "0";
 	int selectedDecimals = 2;
 
@@ -56,7 +45,7 @@ public class Events extends JDialog implements ActionListener, ItemListener {
 	double rightValue = 0;
 	boolean error = false;
 	boolean firstBoot = true;
-	boolean readsuccessfully=true;
+	boolean readsuccessfully = true;
 
 	String[] decimals = { "0", "1", "2", "3", "4", "5" };
 
@@ -65,6 +54,7 @@ public class Events extends JDialog implements ActionListener, ItemListener {
 		super();
 		setLayout(null);
 
+		// Reading the file and setting the values of the variables.
 		try (Scanner s = new Scanner(new File(System.getProperty("user.home") + File.separator + ".calculator.txt"))) {
 			while (s.hasNext()) {
 				fileCont += s.nextLine();
@@ -72,15 +62,15 @@ public class Events extends JDialog implements ActionListener, ItemListener {
 			fileContSplit = fileCont.split("///");
 
 			leftValue = Double.parseDouble(fileContSplit[0]);
+			indexLV = contNumDecimals(leftValue);
 			selectedOperation = fileContSplit[1];
 			rightValue = Double.parseDouble(fileContSplit[2]);
-			result = Double.parseDouble(fileContSplit[3]);
-			selectedDecimals = Integer.parseInt(fileContSplit[4]);
-
+			indexRV = contNumDecimals(rightValue);
+			selectedDecimals = Integer.parseInt(fileContSplit[3]);
 
 		} catch (IOException j) {
 			System.err.println("Error Reading File");
-			readsuccessfully=false;
+			readsuccessfully = false;
 		}
 
 		rbSum = new JRadioButton("Sum");
@@ -115,6 +105,7 @@ public class Events extends JDialog implements ActionListener, ItemListener {
 		rbDivision.addActionListener(this);
 		rbDivision.addItemListener(this);
 
+		// Adding the radio buttons to the JDialog.
 		setSelectedOperation();
 		add(rbSum);
 		add(rbSubtraction);
@@ -176,17 +167,25 @@ public class Events extends JDialog implements ActionListener, ItemListener {
 		lblError.setSize(200, 50);
 		add(lblError);
 
-		if(readsuccessfully){
-			tfLeft.setText(String.format("%f",leftValue));
-			tfRight.setText(String.format("%f",rightValue));
-			lblEqual.setText(String.format("=%f",result));
+		if (readsuccessfully) {
+			tfLeft.setText(String.format("%." + indexLV + "f", leftValue));
+			tfRight.setText(String.format("%." + indexRV + "f", rightValue));
+			calculatorAlgo();
+			showResult();
 		}
 
+		// Saving the file and setting the values of the variables.
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				String saveValue=String.format(Locale.US,"%f///%s///%f///%f///%d", leftValue, selectedOperation, rightValue, result,
-				selectedDecimals);
+				calculatorAlgo();
+				showResult();
+
+				indexLV = contNumDecimals(leftValue);
+				indexRV = contNumDecimals(rightValue);
+
+				String saveValue = String.format(Locale.US, "%." + indexLV + "f///%s///%." + indexRV + "f///%d",
+						leftValue, selectedOperation, rightValue, selectedDecimals);
 				try (PrintWriter pw = new PrintWriter(
 						System.getProperty("user.home") + File.separator + ".calculator.txt")) {
 					pw.println(saveValue);
@@ -195,15 +194,15 @@ public class Events extends JDialog implements ActionListener, ItemListener {
 				}
 				dispose();
 			}
+
 		});
+
 		firstBoot = false;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
-
-		
 		if (e.getSource() == btOperation) {
 
 			calculatorAlgo();
@@ -211,17 +210,18 @@ public class Events extends JDialog implements ActionListener, ItemListener {
 			showResult();
 		}
 
-		if(e.getSource()==rbSum || e.getSource()==rbSubtraction || e.getSource()==rbMultiplication || e.getSource()==rbDivision   ){
-	
-		selectedOperation=e.getActionCommand();
+		if (e.getSource() == rbSum || e.getSource() == rbSubtraction || e.getSource() == rbMultiplication
+				|| e.getSource() == rbDivision) {
 
-			
+			selectedOperation = e.getActionCommand();
+
 		}
 
 	}
 
 	@Override
 	public void itemStateChanged(ItemEvent e) {
+
 		if (!firstBoot) {
 
 			if (e.getSource() == rbSum) {
@@ -239,17 +239,20 @@ public class Events extends JDialog implements ActionListener, ItemListener {
 
 			lblEqual.setText("=");
 
-
 			if (e.getSource() == cbDecimals) {
-			selectedDecimals=cbDecimals.getSelectedIndex();				
+				selectedDecimals = cbDecimals.getSelectedIndex();
 				calculatorAlgo();
 				showResult();
-			}	
+			}
 		}
-
 
 	}
 
+	/**
+	 * It takes the values from the text fields, parses them to doubles, and then
+	 * performs the operation
+	 * based on the selected radio button
+	 */
 	private void calculatorAlgo() {
 		error = false;
 
@@ -278,6 +281,14 @@ public class Events extends JDialog implements ActionListener, ItemListener {
 		}
 	}
 
+	/**
+	 * If there is no error, then set the error label to "Error False", set the
+	 * equal label to the result,
+	 * and make the error label invisible. If there is an error, then set the equal
+	 * label to "=", set the
+	 * error label to "Error", set the error label's color to red, and make the
+	 * error label visible
+	 */
 	private void showResult() {
 		if (!error) {
 			lblError.setText("Error False");
@@ -293,11 +304,30 @@ public class Events extends JDialog implements ActionListener, ItemListener {
 		}
 	}
 
+	/**
+	 * It takes the value of the selectedOperation variable and uses it to select
+	 * the corresponding radio
+	 * button
+	 */
 	private void setSelectedOperation() {
 		int i = Integer.parseInt(selectedOperation);
 
-		JRadioButton[] rbButtons={rbSum,rbSubtraction,rbMultiplication,rbDivision};
+		JRadioButton[] rbButtons = { rbSum, rbSubtraction, rbMultiplication, rbDivision };
 		rbButtons[i].setSelected(true);
+	}
+
+	/**
+	 * It takes a double value and returns the number of decimals it has
+	 * 
+	 * @param valueToCont The value to be counted.
+	 * @return The number of decimals in the double valueToCont.
+	 */
+	private int contNumDecimals(double valueToCont) {
+		String decCont;
+		String[] decSplit;
+		decCont = Double.toString(valueToCont);
+		decSplit = decCont.split("\\.");
+		return decSplit[1].length();
 	}
 
 }
