@@ -8,7 +8,7 @@ public class Application {
     Events events = new Events();
 	events.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	events.setLocationRelativeTo(null);
-	events.setSize(500, 500);
+	events.setSize(500, 200);
 	events.setVisible(true);
   }
 }

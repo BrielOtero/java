@@ -69,7 +69,13 @@ public class Events extends JDialog implements ActionListener, ItemListener {
 			selectedDecimals = Integer.parseInt(fileContSplit[3]);
 
 		} catch (IOException j) {
-			System.err.println("Error Reading File");
+			System.err.println("Error Reading File "+j);
+			readsuccessfully = false;
+		} catch(NumberFormatException i){
+			System.err.println("Error Reading File "+i);
+			readsuccessfully = false;
+		} catch (ArrayIndexOutOfBoundsException k){
+			System.err.println("Error Reading File "+k);
 			readsuccessfully = false;
 		}
 

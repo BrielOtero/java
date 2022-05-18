@@ -26,16 +26,14 @@ public class Events extends JDialog implements ActionListener, ItemListener {
 	int cbLocY = 95;
 
 	String[] textASplit;
-	boolean errTxtA=true;
+	boolean errTxtA = true;
 
 	public Events() {
 		super();
 
 		setLayout(null);
 
-
 		MouseHandler handler = new MouseHandler();
-
 
 		btAdd = new JButton("Add");
 		btAdd.setSize(100, heightSize);
@@ -81,41 +79,39 @@ public class Events extends JDialog implements ActionListener, ItemListener {
 		cbA.setVisible(false);
 		add(cbA);
 
+		cbB = new JComboBox<String>();
+		cbB.setSize(100, heightSize);
+		cbB.setLocation(cbA.getX() + cbA.getSize().width + 50, cbLocY);
+		cbB.addItemListener(this);
+		cbB.setVisible(false);
+		add(cbB);
+
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == btAdd || e.getSource() == txfA) {
-			String txtA = txfA.getText();
-			if(!txtA.equals("") && !txtA.trim().equals("")){
+		add(e);
 
-				if (txtA.contains(";")) {
-					textASplit = txtA.split(";");
-						for (int i = 0; i < textASplit.length; i++) {
-							if(!textASplit[i].trim().equals("") && !textASplit[i].equals(" ")){
-								cbA.addItem(textASplit[i]);
-								errTxtA=false;
-							} 			
-						}
-				
-				} else {
-					cbA.addItem(txtA);
-					errTxtA=false;
-				}
-				
-			}
+		remove(e);
 
-			if(!errTxtA){
-				cbA.setVisible(true);
+		if (e.getSource() == btTransferB) {
+			if (cbA.getItemCount() > 0) {
+				cbB.addItem(cbA.getSelectedItem().toString());
+				cbA.removeItem(cbA.getSelectedItem());
 			}
+			visibleA();
+			visibleB();
 		}
 
-		if(e.getSource()==btRemove){
-			cbA.removeItem(cbA.getSelectedItem());
-			if(cbA.getItemCount()<=0){
-				cbA.setVisible(false);
+		if (e.getSource() == btTransferA) {
+			if (cbB.getItemCount() > 0) {
+				cbA.addItem(cbB.getSelectedItem().toString());
+				cbB.removeItem(cbB.getSelectedItem());
 			}
+			visibleA();
+			visibleB();
 		}
+
 	}
 
 	@Override
@@ -124,7 +120,7 @@ public class Events extends JDialog implements ActionListener, ItemListener {
 
 	}
 
-	private class MouseHandler extends MouseAdapter{
+	private class MouseHandler extends MouseAdapter {
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
@@ -132,7 +128,7 @@ public class Events extends JDialog implements ActionListener, ItemListener {
 
 			System.err.println("Mouse Entered");
 
-			if(e.getSource()==btAdd){
+			if (e.getSource() == btAdd) {
 				btAdd.setForeground(Color.RED);
 			}
 		}
@@ -144,9 +140,74 @@ public class Events extends JDialog implements ActionListener, ItemListener {
 
 			System.err.println("Mouse Exit");
 
-			if(e.getSource()==btAdd){
+			if (e.getSource() == btAdd) {
 				btAdd.setForeground(Color.BLACK);
 			}
+		}
+	}
+
+	private void add(ActionEvent e) {
+		if (e.getSource() == btAdd || e.getSource() == txfA) {
+			String txtA = txfA.getText();
+			if (!txtA.equals("") && !txtA.trim().equals("")) {
+
+				if (txtA.contains(";")) {
+					textASplit = txtA.split(";");
+					for (int i = 0; i < textASplit.length; i++) {
+						if (!textASplit[i].trim().equals("") && !textASplit[i].equals(" ")) {
+							cbA.addItem(textASplit[i]);
+							errTxtA = false;
+						}
+					}
+
+				} else {
+					cbA.addItem(txtA);
+					errTxtA = false;
+				}
+
+			}
+
+			if (!errTxtA) {
+				cbA.setVisible(true);
+			}
+		}
+	}
+
+	private void remove(ActionEvent e) {
+		if (e.getSource() == btRemove) {
+			String txtB;
+			Boolean anyDelete = false;
+			txtB = txfB.getText();
+			if (!txtB.trim().equals("")) {
+				for (int i = cbA.getItemCount() - 1; i >= 0; i--) {
+					if (cbA.getItemAt(i).startsWith(txtB)) {
+						cbA.removeItemAt(i);
+						anyDelete = true;
+					}
+				}
+				if (anyDelete) {
+					txfB.setText("");
+				}
+			} else {
+				cbA.removeItem(cbA.getSelectedItem());
+			}
+			visibleA();
+		}
+	}
+
+	private void visibleA() {
+		if (cbA.getItemCount() <= 0) {
+			cbA.setVisible(false);
+		}else{
+			cbB.setVisible(true);
+		}
+	}
+
+	private void visibleB() {
+		if (cbB.getItemCount() <= 0) {
+			cbB.setVisible(false);
+		}else{
+			cbB.setVisible(true);
 		}
 	}
 
