@@ -168,6 +168,7 @@ public class Events extends JDialog implements ActionListener, ItemListener {
 		// It sets the text of the label to the number of items in the combo box and the index of the
 		// selected item
 		if (e.getSource() == cbA) {
+			resetTimer();
 			lblIndex.setText(String.format("Selected Index: %d", cbA.getSelectedIndex() + 1));
 		}
 
@@ -330,7 +331,7 @@ public class Events extends JDialog implements ActionListener, ItemListener {
 	 * This function resets the timer to zero
 	 */
 	private void resetTimer() {
-		tmRunTime.restart();
+		timeRuntime=0;
 	}
 
 }
