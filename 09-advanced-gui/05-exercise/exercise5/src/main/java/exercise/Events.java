@@ -115,6 +115,7 @@ public class Events extends JFrame implements ActionListener {
 		}
 
 		if (e.getSource() == mnuSave) {
+			System.err.println(contSetItems);
 
 			if (contSetItems == 6) {
 
@@ -135,7 +136,7 @@ public class Events extends JFrame implements ActionListener {
 
 			Third third = new Third(this);
 			third.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-			third.setSize(430, 80);
+			third.setSize(430, 300);
 			third.setLocationRelativeTo(this);
 			third.setResizable(false);
 			third.setVisible(true);
@@ -185,41 +186,31 @@ public class Events extends JFrame implements ActionListener {
 	}
 
 	private void checkNumbers(ActionEvent e) {
-		System.err.println(((AbstractButton) e.getSource()).isSelected());
 
-		if (!((AbstractButton) e.getSource()).isSelected()) {
-			((AbstractButton) e.getSource()).setSelected(false);
-			selectedNum.remove(selectedNum.indexOf(Integer.parseInt(((AbstractButton) e.getSource()).getText())));
-			
-			lblInfo.setText(String.format("SELECT %d NUMBERS", 5 - selectedNum.lastIndexOf(lastItem) + 1));
-			System.err.println("-1");
+
+		
+		if (e.getSource().getClass() == chbNumbers[1].getClass() && selectedNum.size() <= 7) {
+						
 			lastItem = Integer.parseInt(((AbstractButton) e.getSource()).getText());
-		} else {
-
-			System.err.println("+1");
-			if (e.getSource().getClass() == chbNumbers[1].getClass() && selectedNum.size() <= 7) {
 
 				if (selectedNum.size() == 5) {
 					btPlay.setVisible(true);
 				}
 
 				if (selectedNum.size() < 6) {
-
-					if (((JCheckBox) e.getSource()).isSelected()) {
 						if (!selectedNum.contains(lastItem)) {
-							lastItem = Integer.parseInt(((AbstractButton) e.getSource()).getText());
-
+							
 							selectedNum.add(lastItem);
-							System.err.println(selectedNum.lastIndexOf(lastItem));
-							contSetItems = selectedNum.lastIndexOf(lastItem);
+
+							contSetItems = selectedNum.lastIndexOf(lastItem)+1;
+							//System.err.println(selectedNum.lastIndexOf(lastItem));
 							lblInfo.setText(String.format("SELECT %d NUMBERS", 5 - selectedNum.lastIndexOf(lastItem)));
 						}
-
-					}
 
 				} else {
 
 					((JCheckBox) e.getSource()).setSelected(false);
+
 					int res = JOptionPane.showConfirmDialog(this,
 							"You can't add more than 6 numbers\nDo you want reset the number selection", "Error",
 							JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
@@ -237,13 +228,6 @@ public class Events extends JFrame implements ActionListener {
 				}
 
 			}
-		}
-
-		System.err.print("Selected: ");
-		for (int i = 0; i < selectedNum.size(); i++) {
-			System.err.print(selectedNum.get(i)+" ");
-		}
-		System.err.println();
 
 	}
 
