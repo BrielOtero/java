@@ -15,6 +15,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.Timer;
 
 public class Events extends JFrame implements ActionListener {
 
@@ -26,6 +27,11 @@ public class Events extends JFrame implements ActionListener {
 	JMenu mnuGame;
 	JMenuItem mnuSave;
 	JMenuItem mnuRecords;
+	Timer titleTimer;
+
+	boolean played = false;
+
+	int titleCont;
 	int chbWidth = 40;
 	int chbHeight = 40;
 
@@ -38,7 +44,10 @@ public class Events extends JFrame implements ActionListener {
 	int lastItem;
 
 	int[] randomNum = new int[6];
-	ArrayList<Integer> selectedNum = new ArrayList<Integer>(6);
+
+	String[] titleLetters = { "A", "Í", "R", "E", "T", "O", "L", " ", " ", " " };
+	String title = "";
+	ArrayList<Integer> selectedNum = new ArrayList<Integer>(0);
 
 	public Events() {
 
@@ -49,6 +58,9 @@ public class Events extends JFrame implements ActionListener {
 		lblInfo.setLocation(10, 10);
 		lblInfo.setFont(new Font("TimesRoman", Font.BOLD, 30));
 		add(lblInfo);
+
+		titleTimer = new Timer(300, this);
+		titleTimer.start();
 
 		for (int i = 0; i < 49; i++) {
 			chbNumbers[i] = new JCheckBox(String.format("%d", i));
@@ -105,53 +117,83 @@ public class Events extends JFrame implements ActionListener {
 
 		play(e);
 
-		if (e.getSource() == btReset) {
-			randomNum = new int[6];
-			selectedNum = new ArrayList<Integer>(6);
-			resetBtn();
-			lblInfo.setText("SELECT 6 NUMBERS");
-			btReset.setVisible(false);
-			btPlay.setVisible(false);
-		}
+		resetBtn(e);
 
-		if (e.getSource() == mnuSave) {
-			System.err.println(contSetItems);
+		saveBtn(e);
 
-			if (contSetItems == 6) {
+		recordsMnu(e);
 
-				Second second = new Second(this);
-				second.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				second.setSize(430, 80);
-				second.setLocationRelativeTo(this);
-				second.setResizable(false);
-				second.setVisible(true);
+		titleChange(e);
+
+	}
+
+	/**
+	 * It checks if the user has selected more than 6 numbers and if so, it asks the user if he wants to
+	 * reset the selection
+	 * 
+	 * @param e the event that was triggered
+	 */
+	private void checkNumbers(ActionEvent e) {
+
+		if (e.getSource().getClass() == chbNumbers[1].getClass() && selectedNum.size() <= 7) {
+
+			lastItem = Integer.parseInt(((AbstractButton) e.getSource()).getText());
+
+			if (!((AbstractButton) e.getSource()).isSelected()) {
+
+				selectedNum.remove(selectedNum.indexOf(lastItem));
+				lblInfo.setText(String.format("SELECT %d NUMBERS",6- selectedNum.size()));
+				btPlay.setVisible(false);
+			
+
 			} else {
-				JOptionPane.showMessageDialog(this, "Please select 6 numbers BEFORE", "Error",
-						JOptionPane.ERROR_MESSAGE);
+
+				if (selectedNum.size() == 5) {
+					btPlay.setVisible(true);
+				}
+
+				if (selectedNum.size() < 6) {
+					if (!selectedNum.contains(lastItem)) {
+
+						selectedNum.add(lastItem);
+
+						contSetItems = selectedNum.lastIndexOf(lastItem) + 1;
+						// System.err.println(selectedNum.lastIndexOf(lastItem));
+						lblInfo.setText(String.format("SELECT %d NUMBERS", 6 - selectedNum.size()));
+					}
+
+				} else {
+
+					((JCheckBox) e.getSource()).setSelected(false);
+
+					int res = JOptionPane.showConfirmDialog(this,
+							"You can't add more than 6 numbers\nDo you want reset the number selection", "Error",
+							JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
+
+					if (res == JOptionPane.OK_OPTION) {
+						selectedNum = new ArrayList<Integer>(6);
+						btPlay.setVisible(false);
+						for (int i = 0; i < chbNumbers.length; i++) {
+							chbNumbers[i].setSelected(false);
+						}
+						resetDownBtn();
+						lblInfo.setText("SELECT 6 NUMBERS");
+						played = false;
+					}
+
+				}
 			}
 
 		}
 
-		if (e.getSource() == mnuRecords) {
-
-			Third third = new Third(this);
-			third.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-			third.setSize(430, 300);
-			third.setLocationRelativeTo(this);
-			third.setResizable(false);
-			third.setVisible(true);
-
-		}
-
 	}
 
-	private void resetBtn() {
-		for (int i = 0; i < 49; i++) {
-			chbNumbers[i].setSelected(false);
-			chbNumbers[i].setBackground(null);
-		}
-	}
-
+	/**
+	 * It generates 6 random numbers, compares them to the selected numbers and changes the background
+	 * color of the checkboxes accordingly
+	 * 
+	 * @param e ActionEvent
+	 */
 	private void play(ActionEvent e) {
 		if (e.getSource() == btPlay) {
 
@@ -175,60 +217,114 @@ public class Events extends JFrame implements ActionListener {
 							chbNumbers[i].setBackground(Color.RED);
 
 						}
-
+						
 					}
+					chbNumbers[i].setEnabled(false);
 				}
 
 			}
 			btReset.setVisible(true);
 			btPlay.setVisible(false);
+			played = true;
 		}
 	}
 
-	private void checkNumbers(ActionEvent e) {
+	/**
+	 * It resets the background color of the checkboxes to null
+	 */
+	private void resetDownBtn() {
+		for (int i = 0; i < 49; i++) {
+			chbNumbers[i].setSelected(false);
+			chbNumbers[i].setBackground(null);
+		}
+	}
 
+	/**
+	 * It resets the game
+	 * 
+	 * @param e ActionEvent
+	 */
+	private void resetBtn(ActionEvent e) {
+		if (e.getSource() == btReset) {
+			randomNum = new int[6];
+			selectedNum = new ArrayList<Integer>(0);
+			resetDownBtn();
+			for (int i = 0; i < chbNumbers.length; i++) {
+				chbNumbers[i].setEnabled(true);
+			}
+			lblInfo.setText("SELECT 6 NUMBERS");
+			btReset.setVisible(false);
+			btPlay.setVisible(false);
+			played = false;
+		}
+	}
 
-		
-		if (e.getSource().getClass() == chbNumbers[1].getClass() && selectedNum.size() <= 7) {
-						
-			lastItem = Integer.parseInt(((AbstractButton) e.getSource()).getText());
+	/**
+	 * If the user clicks on the save button, the program will check if the user has selected 6 numbers
+	 * and played the game. If the user has selected 6 numbers and played the game, the program will open
+	 * a new window
+	 * 
+	 * @param e the event that triggered the method
+	 */
+	private void saveBtn(ActionEvent e) {
+		if (e.getSource() == mnuSave) {
+			System.err.println(contSetItems);
 
-				if (selectedNum.size() == 5) {
-					btPlay.setVisible(true);
-				}
+			if (contSetItems == 6 && played) {
 
-				if (selectedNum.size() < 6) {
-						if (!selectedNum.contains(lastItem)) {
-							
-							selectedNum.add(lastItem);
-
-							contSetItems = selectedNum.lastIndexOf(lastItem)+1;
-							//System.err.println(selectedNum.lastIndexOf(lastItem));
-							lblInfo.setText(String.format("SELECT %d NUMBERS", 5 - selectedNum.lastIndexOf(lastItem)));
-						}
-
-				} else {
-
-					((JCheckBox) e.getSource()).setSelected(false);
-
-					int res = JOptionPane.showConfirmDialog(this,
-							"You can't add more than 6 numbers\nDo you want reset the number selection", "Error",
-							JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
-
-					if (res == JOptionPane.OK_OPTION) {
-						selectedNum = new ArrayList<Integer>(6);
-						btPlay.setVisible(false);
-						for (int i = 0; i < chbNumbers.length; i++) {
-							chbNumbers[i].setSelected(false);
-						}
-						resetBtn();
-						lblInfo.setText("SELECT 6 NUMBERS");
-					}
-
-				}
-
+				Second second = new Second(this);
+				second.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				second.setSize(430, 80);
+				second.setLocationRelativeTo(this);
+				second.setResizable(false);
+				second.setVisible(true);
+			} else {
+				JOptionPane.showMessageDialog(this, "Please select 6 numbers BEFORE and PLAY!", "Error",
+						JOptionPane.ERROR_MESSAGE);
 			}
 
+		}
+	}
+
+	/**
+	 * It creates a new JFrame object and sets its properties
+	 * 
+	 * @param e the event that triggered the action
+	 */
+	private void recordsMnu(ActionEvent e) {
+		if (e.getSource() == mnuRecords) {
+
+			Third third = new Third(this);
+			third.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			third.setSize(430, 300);
+			third.setLocationRelativeTo(this);
+			third.setResizable(false);
+			third.setVisible(true);
+
+		}
+	}
+
+	/**
+	 * It takes the first letter of the titleLetters array and adds it to the title string
+	 * 
+	 * @param e The event that triggered the method.
+	 */
+	private void titleChange(ActionEvent e) {
+		if (e.getSource() == titleTimer) {
+
+			title = titleLetters[titleCont] + title;
+
+			if (title.length() > 10) {
+				title = title.substring(0, 10);
+			}
+
+			this.setTitle(title);
+
+			titleCont++;
+			if (titleCont > 9) {
+				titleCont = 0;
+			}
+		}
 	}
 
 }

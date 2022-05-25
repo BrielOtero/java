@@ -11,6 +11,7 @@ import java.io.PrintWriter;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 public class Second extends JDialog implements ActionListener {
@@ -24,6 +25,8 @@ public class Second extends JDialog implements ActionListener {
 		super();
 
 		setLayout(new FlowLayout());
+
+		setTitle("SAVE GAME");
 
 		lblInfoName = new JLabel("Insert your name");
 		add(lblInfoName);
@@ -43,20 +46,26 @@ public class Second extends JDialog implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 
 		if (e.getSource() == txfName || e.getSource() == btSave) {
-			
-			if(name==null){
-				
+
+			if (txfName.getText() != null && !txfName.getText().trim().equals("")) {
+
 				name = txfName.getText();
-				
+
 				try (PrintWriter pw = new PrintWriter(
-					new FileWriter(System.getProperty("user.home") + File.separator + ".records.txt", true))) {
-						pw.println(String.format("%s %d", name, correctNumbers));
-					} catch (IOException f) {
-						System.err.println("Can't save");
-					}
-					
-					dispose();
-				
+
+						new FileWriter(System.getProperty("user.home") + File.separator + ".records.txt", true))) {
+
+					pw.println(String.format("%s %d", name, correctNumbers));
+
+				} catch (IOException f) {
+					System.err.println("Can't save");
+				}
+
+				dispose();
+
+			} else {
+				JOptionPane.showMessageDialog(this, "Please insert a valid Name", "Error",
+						JOptionPane.ERROR_MESSAGE);
 			}
 		}
 
