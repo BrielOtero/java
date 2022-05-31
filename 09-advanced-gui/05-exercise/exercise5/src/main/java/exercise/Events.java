@@ -43,7 +43,9 @@ public class Events extends JFrame implements ActionListener {
 	int contSetItems;
 	int lastItem;
 
-	int[] randomNum = new int[6];
+	int saveRandom;
+
+	ArrayList<Integer> randomNum = new ArrayList<Integer>();
 
 	String[] titleLetters = { "A", "Í", "R", "E", "T", "O", "L", " ", " ", " " };
 	String title = "";
@@ -128,7 +130,8 @@ public class Events extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * It checks if the user has selected more than 6 numbers and if so, it asks the user if he wants to
+	 * It checks if the user has selected more than 6 numbers and if so, it asks the
+	 * user if he wants to
 	 * reset the selection
 	 * 
 	 * @param e the event that was triggered
@@ -142,9 +145,8 @@ public class Events extends JFrame implements ActionListener {
 			if (!((AbstractButton) e.getSource()).isSelected()) {
 
 				selectedNum.remove(selectedNum.indexOf(lastItem));
-				lblInfo.setText(String.format("SELECT %d NUMBERS",6- selectedNum.size()));
+				lblInfo.setText(String.format("SELECT %d NUMBERS", 6 - selectedNum.size()));
 				btPlay.setVisible(false);
-			
 
 			} else {
 
@@ -189,7 +191,8 @@ public class Events extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * It generates 6 random numbers, compares them to the selected numbers and changes the background
+	 * It generates 6 random numbers, compares them to the selected numbers and
+	 * changes the background
 	 * color of the checkboxes accordingly
 	 * 
 	 * @param e ActionEvent
@@ -198,16 +201,23 @@ public class Events extends JFrame implements ActionListener {
 		if (e.getSource() == btPlay) {
 
 			for (int i = 0; i < 6; i++) {
-				randomNum[i] = ((int) (Math.random() * 50));
-				System.err.print(randomNum[i] + " ");
+
+				saveRandom = ((int) (Math.random() * 50));
+
+				if (randomNum.contains(saveRandom)) {
+					i--;
+				} else {
+
+					randomNum.add(saveRandom);
+				}
+
 			}
-			System.err.println();
 
 			for (int i = 0; i < chbNumbers.length; i++) {
 
-				for (int j = 0; j < randomNum.length; j++) {
+				for (int j = 0; j < randomNum.size(); j++) {
 
-					if (randomNum[j] == i) {
+					if (randomNum.get(j) == i) {
 
 						if (selectedNum.contains(i)) {
 							chbNumbers[i].setBackground(Color.GREEN);
@@ -217,7 +227,7 @@ public class Events extends JFrame implements ActionListener {
 							chbNumbers[i].setBackground(Color.RED);
 
 						}
-						
+
 					}
 					chbNumbers[i].setEnabled(false);
 				}
@@ -246,7 +256,7 @@ public class Events extends JFrame implements ActionListener {
 	 */
 	private void resetBtn(ActionEvent e) {
 		if (e.getSource() == btReset) {
-			randomNum = new int[6];
+			randomNum.clear();
 			selectedNum = new ArrayList<Integer>(0);
 			resetDownBtn();
 			for (int i = 0; i < chbNumbers.length; i++) {
@@ -260,8 +270,10 @@ public class Events extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * If the user clicks on the save button, the program will check if the user has selected 6 numbers
-	 * and played the game. If the user has selected 6 numbers and played the game, the program will open
+	 * If the user clicks on the save button, the program will check if the user has
+	 * selected 6 numbers
+	 * and played the game. If the user has selected 6 numbers and played the game,
+	 * the program will open
 	 * a new window
 	 * 
 	 * @param e the event that triggered the method
@@ -305,7 +317,8 @@ public class Events extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * It takes the first letter of the titleLetters array and adds it to the title string
+	 * It takes the first letter of the titleLetters array and adds it to the title
+	 * string
 	 * 
 	 * @param e The event that triggered the method.
 	 */
